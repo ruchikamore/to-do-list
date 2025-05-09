@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            color:rgb(11, 11, 11);
+            text-align: center;
+            background-image:url("https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
+            background-position:center;
+            background-size: cover;
+            background-repeat:no-repeat;
+        }
+        .parent{
+            margin:auto;
+            margin-top:50px;
+            height:500px;
+            width:400px;
+            /* border-radius: 2px solid rgba(213, 213, 251, 0.19); */
+            overflow:auto;
+            scrollbar-width:none;
+            border:2px solid rgb(32, 32, 32);
+            border-radius:30px;
+
+            /* glassmorphism style */
+            background: rgba(255,255,255,0.1);
+            border:2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+        }
+        input{
+            height:25px;
+            width: 250px;
+            border-radius:8px;
+            border:none;
+            padding: 5px;
+            background: rgba(255,255,255,0.2);
+            color:black;
+            backdrop-filter: blur(5px);
+        }
+        input::placeholder{
+            color:#2f2e2e;
+        }
+        .btn{
+            margin:20px;
+
+        }
+        button{
+            height:35px;
+            margin:5px;
+            padding:5px 15px;
+            border-radius: 8px;
+            border:none;
+            background: rgba(255,255,255,0.2);
+            color: #090909;
+            cursor:pointer;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
+        button:hover{
+            background:rgba(255,255,255,0.4);
+        }
+        li{
+            list-style-type: none;
+            margin: 10px;
+            font-size:18px;
+        }
+        li button{
+            margin-left:10px;
+            background: rgba(255,255,255,0.3)
+        }
+        li button:hover{
+            background:rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="parent">
+        <h1>TO-DO LIST</h1>
+        <input type="text" placeholder="Enter Your Task">
+        <div class="btn">
+            <button onclick="insert()">Add Task</button>
+            <button onclick="location.reload()">Reset Task</button>
+            <button onclick="edit()">Edit Task</button>
+        </div>
+        <div class="content"></div>
+    </div>
+    <script>
+        let input = document.querySelector("input");
+        let isEditing = false;
+
+        // Trigger "Add Task" on Enter key
+input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        insert();
+    }
+});
+        function insert() {
+            if (input.value == "") {
+                alert("Enter some Task in list");
+            } else {
+                let list = document.createElement("li");
+                list.innerHTML = `<span>${input.value}</span> <button>Delete</button>`;
+                let item = document.querySelector(".content");
+                item.append(list);
+                input.value = "";
+    
+                list.querySelector("button").addEventListener("click", () => {
+                    list.remove();
+                });
+            }
+        }
+    
+        function edit() {
+            const button = document.querySelectorAll(".content li");
+            const editBtn = document.querySelector(".btn button:nth-child(3)");
+    
+            if (!isEditing) {
+                // Enable editing
+                button.forEach((li) => {
+                    const span = li.querySelector("span");
+                    const currentText = span.textContent;
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.value = currentText;
+                    span.replaceWith(input);
+                });
+                editBtn.textContent = "Save Changes";
+                isEditing = true;
+            } else {
+                // Save changes
+                button.forEach((li) => {
+                    const input = li.querySelector("input");
+                    const newText = input.value;
+                    const span = document.createElement("span");
+                    span.textContent = newText;
+                    input.replaceWith(span);
+                });
+                editBtn.textContent = "Edit Task";
+                isEditing = false;
+            }
+        }
+    </script>
+    
+</body>
+</html>
